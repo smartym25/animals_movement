@@ -11,18 +11,19 @@ axes = plt.axes(projection="3d")
 
 height_chassis = 2
 
+#coordinates of the attach joints
 attach_joints = np.array([
     [4,2,height_chassis], [8,2, height_chassis],
     [9.5,6, height_chassis], [8,10, height_chassis],
     [4,10, height_chassis], [2.5,6, height_chassis]
 ])
-
+#coordinates of the knee joints
 knee_joints = np.array([
     [1.5,-0.5,2.5], [11.5,-0.5,2.5],
     [12,6,2.5], [11.5,12.5,2.5],
     [1.5,12.5,2.5], [-1,6,2.5] 
 ])
-
+#coordinates of the foots joints
 foot_joints = np.array([
     [0.5,-0.5,0], [12.5,-0.5,0],
     [13,6,0], [12.5,13.5,0],
@@ -45,17 +46,19 @@ def plot_femor(axes,attach,knee,color):
 for i in range(6):
     plot_line(axes, attach_joints[i], attach_joints[(i+1)%6], color="red")
 
-#legs
+#upper and shorter legs
 femors = []
 for i in range(6):
     femor = plot_femor(axes, attach_joints[i], knee_joints[i],color = "blue")
     femors.append(femor)
-
+    
+#lower and longer legs
 tibias = []
 for i in range(6):
     tibia = plot_tibia(axes, knee_joints[i], foot_joints[i], color = "blue")
     tibias.append(tibia)
 
+#coordinates of the foots while the spider is moving
 coordinates_foots_steps = {
     1: [np.array([0.5, -1.5,0]), np.array([0.5, -1.5,0.5]), np.array([0.5, 4, 0.5]), np.array([0.5, 4, 0])],
     2: [np.array([12,4,0]), np.array([12,4,0.5]), np.array([12,-1.5,0.5]), np.array([12,-1.5,0])],
@@ -97,7 +100,7 @@ def update_leg1(frames):
         
         new_x_foot = target_foot[0] + L3 * np.cos(J1) * np.cos(J3)
         new_y_foot = target_foot[1] + L3 * np.sin(J1) * np.cos(J3)
-        new_z_foot = 0 #voglio che si alzi
+        new_z_foot = 0
         
         femors[i].set_data([attach_joints[i][0], new_x_knee], [attach_joints[i][1], new_y_knee])
         femors[i].set_3d_properties([attach_joints[i][2], new_z_knee])
@@ -122,6 +125,8 @@ reference_line, = axes.plot(
 ani = FuncAnimation(screen, update_leg1, frames=100, interval=100)
 #fit the animation in 3d axis
 plt.tight_layout()
+#show the results
+plt.show()
 #show the results
 plt.show()
 
